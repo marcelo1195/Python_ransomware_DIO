@@ -9,8 +9,8 @@ def decrypt_fernet_key_with_rsa(encrypted_fernet_key, private_key_path):
     fernet_key = private_key.decrypt(
         encrypted_fernet_key,
         padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA512()),
-            algorithm=hashes.SHA512(),
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
             label=None
         )
     )

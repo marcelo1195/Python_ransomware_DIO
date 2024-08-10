@@ -3,7 +3,6 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 
-
 def generate_fernet_key():
     return Fernet.generate_key()
 
@@ -14,8 +13,8 @@ def encrypt_fernet_key_with_rsa(fernet_key, public_key_path):
     encrypted_key = public_key.encrypt(
         fernet_key,
         padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA512()),
-            algorithm=hashes.SHA512(),
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
             label=None
         )
     )
