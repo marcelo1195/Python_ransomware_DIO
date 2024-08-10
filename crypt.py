@@ -2,6 +2,8 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
+import os
+from utils import get_script_directory
 
 def generate_fernet_key():
     return Fernet.generate_key()
@@ -19,6 +21,20 @@ def encrypt_fernet_key_with_rsa(fernet_key, public_key_path):
         )
     )
     return encrypted_key
+
+
+def save_encrypted_fernet_key(encrypted_key):
+    # Keys Directory
+    keys_dir = os.path.join(get_script_directory(), 'keys')
+
+    # Path to save fernet keys
+    encrypted_fernet_key_path = os.path.join(keys_dir, 'encrypted_fernet_key.bin')
+
+    # Saving encrypted fernet keys
+    with open(encrypted_fernet_key_path, 'wb') as f:
+        f.write(encrypted_key)
+    print(f"Chave Fernet criptografada salva em: {encrypted_fernet_key_path}")
+
 
 def encrypt_file(file_path, fernet):
     with open(file_path, 'rb') as file:
