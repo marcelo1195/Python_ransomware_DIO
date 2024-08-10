@@ -63,4 +63,13 @@ def get_operational_system():
         return 'Unknown'
 
 def get_home_directory():
-    return os.path.expanduser('-')
+  """
+  Get the home directory based on the operating system.
+  """
+  os_type = get_operational_system()
+  if os_type == 'Windows':
+      return os.path.join(os.path.expanduser('~'))  # Windows
+  elif os_type in ['Linux', 'macOS']:
+      return os.path.expanduser('~')  # Linux or macOS
+  else:
+      raise OSError("Operating system not supported")
