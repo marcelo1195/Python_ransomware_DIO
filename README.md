@@ -1,86 +1,70 @@
-# Educational Cryptography Project
+# File Encryption and Decryption Tool
 
-## Important Notice
+This project provides a tool for encrypting and decrypting files using Fernet symmetric encryption and RSA asymmetric encryption. The tool generates a Fernet key, encrypts it with an RSA public key, and allows for the encryption and decryption of specified file types.
 
-This project is strictly for educational and research purposes only. It demonstrates concepts of cryptography and data security. Using this software for malicious or illegal activities is strictly prohibited and may result in severe legal consequences.
+## Features
 
-## Overview
+- Generate RSA key pairs (public and private).
+- Generate a Fernet key for symmetric encryption.
+- Encrypt the Fernet key using the RSA public key.
+- Encrypt files with specified extensions.
+- Decrypt files using the RSA private key and the previously encrypted Fernet key.
+- Create an instruction file for users after encryption.
 
-This project implements a simple encryption system that demonstrates the basic functioning of ransomware. It uses hybrid cryptography, combining symmetric encryption (Fernet/AES) for files and asymmetric encryption (RSA) to protect the symmetric key.
+## Directory Structure
+project/
+│
+├── keys/                     # Directory for storing RSA keys and encrypted Fernet key
+│   ├── private_key.pem       # RSA private key
+│   └── public_key.pem        # RSA public key
+│
+├── crypt.py                  # Script for generating and saving the encrypted Fernet key
+├── decrypt.py                # Script for decrypting files
+├── main.py                   # Main script for orchestrating the encryption process
+├── RSA_keys.py               # Script for generating RSA keys
+└── utils.py                  # Utility functions for directory and file handling
 
-## Components
 
-1. `crypt.py`: Main script for encrypting files.
-2. `decrypt.py`: Script for decrypting files (to be implemented).
-3. `utils.py`: Utility functions, including operating system detection.
-4. `RSA_keys.py`: Script to generate RSA keys (not included in this repository).
-5. `requirements.txt`: List of Python dependencies.
+## Usage
+
+1. **Generate RSA Keys:**
+   Run the `RSA_keys.py` script to generate the RSA key pair. This will create a `keys` directory containing the public and private keys.
+
+bash
+python RSA_keys.py
+
+
+2. **Encrypt Files:**
+   Run the `main.py` script to generate a Fernet key, encrypt it with the RSA public key, and encrypt the specified files in the user's home directory.
+
+bash
+python main.py
+
+
+3. **Decrypt Files:**
+   Run the `decrypt.py` script to decrypt the encrypted files using the RSA private key and the previously encrypted Fernet key.
+
+bash
+python decrypt.py
+
 
 ## Requirements
 
-- Python 3.7+
-- Required libraries are listed in `requirements.txt`
+- Python 3.x
+- `cryptography` library
 
-To install the dependencies, run:
-pip install -r requirements.txt
+You can install the required library using pip:
 
-
-## How to Use
-
-### Preparation
-
-1. Generate an RSA key pair using `RSA_keys.py` (not provided).
-2. Save the public key as `public_key.pem` in the project directory.
-
-### Encryption
-
-Run the encryption script:
-
-python crypt.py
+bash
+pip install cryptography
 
 
-This script will:
-- Generate a Fernet key.
-- Encrypt files in the home directory (Windows) or /home (Linux/macOS).
-- Encrypt the Fernet key with the RSA public key.
-- Create an instruction file.
+## Important Notes
 
-### Decryption (Not Implemented)
-
-Decryption requires the corresponding RSA private key. A decryption script would need to:
-1. Decrypt the Fernet key using the RSA private key.
-2. Use the Fernet key to decrypt the files.
-
-## Packaged Executable
-
-For easier distribution, this project can be packaged into a single executable file using PyInstaller. To create the executable:
-
-1. Install PyInstaller:
-pip install pyinstaller
-
-
-2. Create the executable:
-pyinstaller --onefile --windowed --clean --noupx crypt.py
-
-
-3. The executable will be created in the `dist` directory.
-
-Note: The executable is platform-specific. You'll need to create separate executables for different operating systems.
-
-## Security and Ethics
-
-- This software is a demonstration and should not be used on real systems.
-- Encrypting system files can cause irreparable damage.
-- Always obtain explicit permission before testing on any system.
-
-## Contributions
-
-Contributions to improve security, efficiency, or educational purposes are welcome. Please open an issue to discuss major changes before submitting a pull request.
+- Ensure that you have the necessary permissions to access and modify the files in the specified directories.
+- Use this tool responsibly and only on files you have permission to encrypt or decrypt.
+- The instruction file created after encryption contains important information for decrypting the files.
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
-## Disclaimer
-
-The authors are not responsible for any misuse or damage caused by this software. This project is purely for educational and information security research purposes.
+This project is licensed under the MIT License.
